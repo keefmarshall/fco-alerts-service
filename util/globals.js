@@ -28,8 +28,8 @@ function setLastUpdated(lastUpdated)
 
 exports.lastUpdated = function(next)
 {
-	db.meta.findOne({"_id" : "global_settings"}, function(err, lastUpdated) {
-		next(lastUpdated);
+	db.meta.findOne({"_id" : "global_settings"}, function(err, settings) {
+		next(settings.lastUpdated);
 	});
 };
 

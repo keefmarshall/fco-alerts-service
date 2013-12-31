@@ -27,6 +27,7 @@ function updateAlertsFromFeed(feed)
 	// hmm.. this is where async gets  annoying. I wonder if promises would make
 	// for clearer code,
 	globals.lastUpdated(function(lastUpdated) {
+		console.log("Feed date: " + feed.meta.pubDate + ", lastupdated = " + lastUpdated);
 		if (feed.meta.pubDate > lastUpdated)
 		{
 			console.log("Updating alerts in database..");
