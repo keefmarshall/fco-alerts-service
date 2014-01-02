@@ -5,8 +5,8 @@
 var db = require('../mongodb');
 var FeedParser = require("feedparser");
 var request = require('request');
-var globals = require('../util/globals');
-var alerter = require('../util/alerter');
+var globals = require('../lib/globals');
+var alerter = require('../lib/alerter');
 
 function storeAlert(alert)
 {

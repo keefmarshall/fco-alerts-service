@@ -12,6 +12,7 @@
     "feedparser" : "*",
     "request": "*",
     "cron" : "*",
-    "q": "*"
+    "q": "*",
+    "winston" : "*"
   }
 }
