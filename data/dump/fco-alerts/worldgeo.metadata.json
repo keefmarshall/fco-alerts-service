@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "fco-alerts.worldgeo", "name" : "_id_" }, { "v" : 1, "key" : { "geometry" : "2dsphere" }, "ns" : "fco-alerts.worldgeo", "name" : "geometry_2dsphere" }, { "v" : 1, "key" : { "properties.name" : 1 }, "ns" : "fco-alerts.worldgeo", "name" : "properties.name_1" } ] }
