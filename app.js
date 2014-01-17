@@ -6,6 +6,8 @@
 var express = require('express');
 var routes = require('./routes');
 var alertFeed = require('./routes/fco-alert-feed');
+var alertData = require('./routes/fco-alert-data');
+var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 
@@ -30,7 +32,12 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 //app.get('/users', user.list);
-app.get('/alerts', alertFeed.get);
+app.get('/refresh_alerts', alertFeed.refresh);
+
+app.get('/regions', alertData.regionList);
+app.get('/regions/:region', alertData.region);
+
+app.post('/register', user.register);
 
 // start cron job to update alerts:
 // TODO: make this work sanely with multiple instances

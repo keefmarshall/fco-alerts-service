@@ -90,7 +90,7 @@ function updateAlerts()
 }
 
 
-exports.get = function(req, res)
+exports.refresh = function(req, res)
 {
 	fetchAlerts(
 			function(feed) {
