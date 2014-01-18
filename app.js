@@ -45,6 +45,7 @@ app.post('/deregister', user.deregister);
 
 // DEBUG/TEST:
 app.get('/fakealert', test.triggerAlert);
+app.get('/addtestdevice', test.addTestDevice);
 
 // start cron job to update alerts:
 // TODO: make this work sanely with multiple instances

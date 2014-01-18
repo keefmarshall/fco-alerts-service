@@ -33,3 +33,15 @@ function sendTestAlert(alert, res)
 	alerter.triggerAlert(alert);
 	res.send("Alert triggered for " + alert.title);
 }
+
+exports.addTestDevice = function(req, res)
+{
+	db.devices.insert({"_id":"APA91bFCuqcyoVfqJnOrvMCZuvfBA7_vcj7wP8-MUfjyHzajYN5IHR2ccQfMN7H97KBQPm794mN8IsfdaEGzSg3ERIwF6Kvw-ZFaVYGPZdhpcU-DrBFRiv5elPMsec6e-bDAS1MxDQDkWUxDtP_lEpFQ1c8JESqSZunaV_Wj813amNUEtm5PjjI"}, 
+			function(err, newthing)
+			{
+				if (err) { res.status(500).send("Device not added! " + err);}
+				else {res.send("Done");}
+			}
+	);
+};
+
