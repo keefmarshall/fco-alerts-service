@@ -28,3 +28,16 @@ exports.region = function(req, res)
 		}
 	});
 };
+
+exports.latest = function(req, res)
+{
+	db.alerts.find().sort({"date": -1}).limit(10, function(err, alerts){
+		if (err || !alerts)
+		{
+			res.status(500).send("An error occurred: " + err);
+			return;
+		}
+		
+		res.send(alerts);
+	});
+}
