@@ -49,7 +49,7 @@
 { 'name': 'Comoros', 'link': '/foreign-travel-advice/comoros'},
 { 'name': 'Congo', 'link': '/foreign-travel-advice/congo'},
 { 'name': 'Costa Rica', 'link': '/foreign-travel-advice/costa-rica'},
-{ 'name': 'Côte d'Ivoire', 'link': '/foreign-travel-advice/cote-d-ivoire'},
+{ 'name': 'Côte d\'Ivoire', 'link': '/foreign-travel-advice/cote-d-ivoire'},
 { 'name': 'Croatia', 'link': '/foreign-travel-advice/croatia'},
 { 'name': 'Cuba', 'link': '/foreign-travel-advice/cuba'},
 { 'name': 'Curaçao', 'link': '/foreign-travel-advice/curacao'},
@@ -223,5 +223,5 @@
 { 'name': 'Western Sahara', 'link': '/foreign-travel-advice/western-sahara'},
 { 'name': 'Yemen', 'link': '/foreign-travel-advice/yemen'},
 { 'name': 'Zambia', 'link': '/foreign-travel-advice/zambia'},
-{ 'name': 'Zimbabwe', 'link': '/foreign-travel-advice/zimbabwe'},
+{ 'name': 'Zimbabwe', 'link': '/foreign-travel-advice/zimbabwe'}
 ]
