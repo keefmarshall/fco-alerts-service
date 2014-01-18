@@ -19,17 +19,25 @@ exports.register = function(req, res)
 		return;
 	}
 	
-	// TODO: check if it exists already, otherwise this will give an error!
-	db.devices.insert({"_id": regid}, function(err, saved) {
-		if (err || !saved)
-		{
-			res.status(500).send("An error occurred: " + err);
+	// check if it exists already, otherwise this will give an error!
+	db.devices.find({'_id': regid}, function(err, list){
+		if (list.length == 0) {
+			db.devices.insert({"_id": regid}, function(err, saved) {
+				if (err || !saved)
+				{
+					res.status(500).send("An error occurred: " + err);
+				}
+				else
+				{
+					res.send(saved);
+				}
+			});
 		}
 		else
 		{
-			res.send(saved);
+			res.send(list[0]);
 		}
-	});
+	})
 };
 
 exports.deregister = function(req, res)
