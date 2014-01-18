@@ -42,6 +42,7 @@ app.get('/latest', alertData.latest);
 // REGISTRATION
 app.post('/register', user.register);
 app.post('/deregister', user.deregister);
+app.post('/countries', user.setCountries);
 
 // DEBUG/TEST:
 app.get('/fakealert', test.triggerAlert);

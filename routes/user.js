@@ -62,3 +62,32 @@ exports.deregister = function(req, res)
 		}
 	});
 };
+
+exports.setCountries = function(req, res)
+{
+	var regid = req.body.regid;
+	var countriesJson = req.body.countries;
+	
+	if(!regid || regid.length == 0 || !countriesJson)
+	{
+		res.status(400).send("No regid, or missing countries field!");
+		return;
+	}
+	
+	var countries = JSON.parse(countriesJson);
+	var device = {
+			"_id": regid,
+			"countries": countries
+	};
+	
+	db.devices.update({"_id": regid}, device, {upsert: true}, function(err) {
+		if(err)
+		{
+			res.status(500).send("An error occurred updating settings: " + err);
+		}
+		else
+		{
+			res.send("Updated.");
+		}
+	});
+};
