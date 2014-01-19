@@ -91,3 +91,37 @@ exports.setCountries = function(req, res)
 		}
 	});
 };
+
+exports.removeCountries = function(req, res) {
+	var regid = req.body.regid;
+	
+	if (!regid || regid.length == 0)
+	{
+		res.status(400).send("No registration ID!");
+		return ;
+	}
+	
+	// fetch the device, remove the countries property, update with the changed device object:
+	db.devices.findOne({'_id': regid}, function(err, device) {
+		if (err)
+		{
+			res.status(500).send("An error occurred removing countries: " + err);
+			return;
+		}
+		
+		delete device.countries;
+		db.devices.update({"_id": regid}, device, function(err) {
+			if(err)
+			{
+				res.status(500).send(
+						"An error occurred updating device with removed countries: " + err);
+			}
+			else
+			{
+				res.send("Updated.");
+			}
+		});
+		
+	});
+	
+};
