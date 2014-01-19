@@ -11,6 +11,7 @@ var collections = ["alerts", "devices", "meta", "worldgeo"];
 var mongodb = require("mongojs").connect(databaseURI, collections);
 
 mongodb.alerts.ensureIndex({'title': 1});
+mongodb.devices.ensureIndex({'countries': 1});
 
 module.exports = mongodb;
 
