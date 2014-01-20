@@ -7,6 +7,7 @@ var FeedParser = require("feedparser");
 var request = require('request');
 var globals = require('../lib/globals');
 var alerter = require('../lib/alerter');
+var utils = require('../lib/utils');
 
 function storeAlert(alert)
 {
@@ -37,6 +38,7 @@ function updateAlertsFromFeed(feed)
 				if (item.pubDate > lastUpdated)
 				{
 					storeAlert(item);
+					item.description = utils.stripHtml(item.description);
 					alerter.triggerAlert(item);
 				}
 			}
