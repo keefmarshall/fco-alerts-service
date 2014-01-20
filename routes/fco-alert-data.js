@@ -17,14 +17,14 @@ exports.region = function(req, res)
 {
 	var region = req.params.region;
 	
-	db.alerts.find({"title" : region}).sort({"date": -1}, function(err, alerts) {
+	db.alerts.find({"title" : region}).sort({"date": -1}).limit(10, function(err, alerts) {
 		if (err || !alerts || alerts.length == 0)
 		{
 			res.send("Region '" + region + "' has no alerts");
 		}
 		else
 		{
-			res.send(alerts[0]);
+			res.send(alerts);
 		}
 	});
 };

@@ -38,6 +38,7 @@ app.get('/refresh_alerts', alertFeed.refresh);
 app.get('/regions', alertData.regionList);
 app.get('/regions/:region', alertData.region);
 app.get('/latest', alertData.latest);
+app.get('/latest/:region', alertData.region);
 
 // REGISTRATION
 app.post('/register', user.register);
