@@ -41,3 +41,39 @@ exports.latest = function(req, res)
 		res.send(alerts);
 	});
 }
+
+exports.latestByDevice = function(req, res)
+{
+	// Find countries for this device, then find all alerts relating to that country
+	var regid = req.params.regid;
+	
+	db.devices.findOne({"_id": regid}, function(err, device) {
+		if (err || !device) {
+			res.status(404).send("Device not found");
+			return;
+		}
+		
+		console.log("Got countries: " + JSON.stringify(device.countries));
+		if (device.countries)
+		{
+			db.alerts.find({'title': {'$in' : device.countries}})
+				.sort({'date': -1}).limit(10, function(err, alerts)
+			{
+				if (err || !alerts)
+				{
+					console.log("Error occurred fetching custom alerts: " + err);
+					res.status(500).send({'Error': err});
+				}
+				else
+				{
+					res.send(alerts);
+				}
+			});
+		}
+		else // just get everything
+		{
+			console.log("No countries found, showing all");
+			exports.latest(req, res);
+		}
+	})
+};
