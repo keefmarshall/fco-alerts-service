@@ -8,12 +8,13 @@ var utils = require('../lib/utils');
 
 exports.triggerAlert = function(req, res) {
 	// Have we been given a message to send in the request?
-	if (req.query.title && req.query.description)
+	if (req.param('title') && req.param('description'))
 	{
 		var alert = {
-				"title" : req.body.title,
-				"description": utils.stripHtml(req.body.description),
-				"link": (req.query.link ? req.query.link : "http://fcoalerts.herokuapp.com/")
+				"guid" : new Date().getTime(),
+				"title" : req.param('title'),
+				"description": utils.stripHtml(req.param('description')),
+				"link": (req.param('link') ? req.param('link') : "http://fcoalerts.herokuapp.com/")
 		};
 		sendTestAlert(alert, res);
 	}
