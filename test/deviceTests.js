@@ -40,6 +40,16 @@ vows.describe('devices').addBatch({
 	
 	"An existing device" : {
 		topic: function() {
+			deviceUtils.findDevice(device1._id).should.eventually.deep.equal(device1)
+				.notify(this.callback);
+		},
+		"can be found" : function() {}
+	}
+	
+}).addBatch({
+	
+	"An existing device" : {
+		topic: function() {
 			var device = {
 				_id : device1._id,
 				countries: ['Angola', 'Barbados']
