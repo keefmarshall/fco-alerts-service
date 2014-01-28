@@ -73,9 +73,12 @@ vows.describe('devices').addBatch({
 	"An existing device" : {
 		topic: function() { 
 			// the trick here is to also pass any rejected error to the callback
-			deviceDao.insertDevice(device2).then(
+			// Also 'this' varies, so take a copy reference first:
+			var callback = this.callback;
+			deviceDao.insertDevice(device2).then(function() {
 				deviceDao.changeDeviceId(device2._id, "devutils.changed").
-					should.be.fulfilled.and.notify(this.callback), this.callback);
+					should.be.fulfilled.and.notify(callback);
+			}).catch(callback);
 		},
 		"can have it's ID changed" : function() { }
 	}
@@ -86,10 +89,10 @@ vows.describe('devices').addBatch({
 		topic: function() {
 			var callback = this.callback;
 			deviceDao.deleteDevice(device1._id).then(function() {
-				deviceDao.deleteDevice(device2._id).then(function() {
-					deviceDao.deleteDevice("devutils.changed").then(callback);
-				}, callback);
-			}, callback);
+				deviceDao.deleteDevice(device2._id);
+			}).then(function() {
+				deviceDao.deleteDevice("devutils.changed").then(callback);
+			}).catch(callback);
 		},
 		"done": function(){}
 	}
