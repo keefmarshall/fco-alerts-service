@@ -1,14 +1,9 @@
 
 /*
- * GET users listing.
+ * Device / user registration and preference management.
  */
 
-var db = require('../mongodb');
 var deviceUtils = require('../lib/deviceUtils');
-
-exports.list = function(req, res){
-  res.send("respond with a resource");
-};
 
 exports.register = function(req, res)
 {
@@ -18,23 +13,28 @@ exports.register = function(req, res)
 		// check if it exists already, otherwise this will give an error!
 		// If it does exist, just leave it as-is - the user probably updated
 		// to a new version of the app which re-registered with the same ID.
-		db.devices.findOne({'_id': regid}, function(err, found) {
-			if (!found) 
-			{
-				deviceUtils.insertDevice({"_id": regid}).then(
-					function(saved) {
-						res.send(saved);
-					}, 
-					function(err) {
-						res.status(500).send("An error occurred: " + err);
-					}
-				);
+		deviceUtils.findDevice(regid).then(
+			function(found) {
+				if (!found) 
+				{
+					deviceUtils.insertDevice({"_id": regid}).then(
+						function(saved) {
+							res.send(saved);
+						}, 
+						function(err) {
+							res.status(500).send("An error occurred: " + err);
+						}
+					);
+				}
+				else
+				{
+					res.send(found);
+				}
+			},
+			function(err) {
+				res.status(500).send("Error registering device: " + err);
 			}
-			else
-			{
-				res.send(found);
-			}
-		});
+		);
 	}
 };
 
@@ -86,25 +86,23 @@ exports.removeCountries = function(req, res)
 	{
 		// fetch the device, remove the countries property, 
 		// then update with the changed device object:
-		db.devices.findOne({'_id': regid}, function(err, device) {
-			if (err)
-			{
+		deviceUtils.findDevice(regid).then(
+			function(device) {
+				delete device.countries;
+				deviceUtils.updateDevice(device).then(
+					function() {
+						res.send("Updated.");
+					},
+					function(err) {
+						res.status(500).send(
+							"An error occurred updating device with removed countries: " + err);
+					}
+				);
+			},
+			function(err) {
 				res.status(500).send("An error occurred removing countries: " + err);
-				return;
 			}
-			
-			delete device.countries;
-			deviceUtils.updateDevice(device).then(
-				function() {
-					res.send("Updated.");
-				},
-				function(err) {
-					res.status(500).send(
-						"An error occurred updating device with removed countries: " + err);
-				}
-			);
-			
-		});
+		);
 	}
 };
 
