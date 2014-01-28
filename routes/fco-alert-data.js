@@ -18,7 +18,7 @@ exports.region = function(req, res)
 	var region = req.params.region;
 	
 	db.alerts.find({"title" : region}).sort({"date": -1}).limit(10, function(err, alerts) {
-		if (err || !alerts || alerts.length == 0)
+		if (err || !alerts || alerts.length === 0)
 		{
 			res.send("Region '" + region + "' has no alerts");
 		}
@@ -40,7 +40,7 @@ exports.latest = function(req, res)
 		
 		res.send(alerts);
 	});
-}
+};
 
 exports.latestByDevice = function(req, res)
 {
@@ -75,5 +75,5 @@ exports.latestByDevice = function(req, res)
 			console.log("No countries found, showing all");
 			exports.latest(req, res);
 		}
-	})
+	});
 };
