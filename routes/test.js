@@ -18,6 +18,15 @@ exports.triggerAlert = function(req, res) {
 		};
 		sendTestAlert(alert, res);
 	}
+	else if (req.param("index")) // send the 'n'th alert, given index=n
+	{
+		var index = parseInt(req.param("index"));
+		db.alerts.find().limit(index, function(err, alerts) {
+			var alert = alerts[index - 1];
+			alert.description = utils.stripHtml(alert.description);
+			sendTestAlert(alert, res);
+		});
+	}
 	else
 	{
 		// pick an alert at random from Mongo and send it:
