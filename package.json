@@ -12,8 +12,13 @@
     "feedparser" : "*",
     "request": "*",
     "cron" : "*",
-    "q": "*",
+    "rsvp": "*",
     "winston" : "*",
     "node-gcm": "*"
+  },
+  "devDependencies" : {
+	  "vows": "*",
+	  "chai": "*",
+	  "chai-as-promised": "*"
   }
 }
