@@ -80,7 +80,7 @@ vows.describe('devices').addBatch({
 					should.be.fulfilled.and.notify(callback);
 			}).catch(callback);
 		},
-		"can have it's ID changed" : function() { }
+		"can have its ID changed" : function() { }
 	}
 
 }).addBatch({
