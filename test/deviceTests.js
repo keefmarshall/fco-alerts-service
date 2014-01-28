@@ -78,7 +78,7 @@ vows.describe('devices').addBatch({
 			deviceUtils.deleteDevice(device1._id).then(function() {
 				deviceUtils.deleteDevice(device2._id).then(function() {
 					deviceUtils.deleteDevice("devutils.changed").then(callback);
-				}, callback)
+				}, callback);
 			}, callback);
 		},
 		"done": function(){}
