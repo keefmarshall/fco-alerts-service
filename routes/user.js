@@ -3,7 +3,7 @@
  * Device / user registration and preference management.
  */
 
-var deviceUtils = require('../lib/deviceUtils');
+var deviceDao = require('../lib/deviceDao');
 
 exports.register = function(req, res)
 {
@@ -13,11 +13,11 @@ exports.register = function(req, res)
 		// check if it exists already, otherwise this will give an error!
 		// If it does exist, just leave it as-is - the user probably updated
 		// to a new version of the app which re-registered with the same ID.
-		deviceUtils.findDevice(regid).then(
+		deviceDao.findDevice(regid).then(
 			function(found) {
 				if (!found) 
 				{
-					deviceUtils.insertDevice({"_id": regid}).then(
+					deviceDao.insertDevice({"_id": regid}).then(
 						function(saved) {
 							res.send(saved);
 						}, 
@@ -44,7 +44,7 @@ exports.deregister = function(req, res)
 	if (regid)
 	{
 		// Remove device regid from mongo:
-		deviceUtils.deleteDevice(regid).then(
+		deviceDao.deleteDevice(regid).then(
 			function() {
 				res.send("Item removed.");
 			},
@@ -68,7 +68,7 @@ exports.setCountries = function(req, res)
 			"countries": countries
 		};
 		
-		deviceUtils.updateDevice(device).then(
+		deviceDao.updateDevice(device).then(
 			function() {
 				res.send("Updated.");
 			},
@@ -86,10 +86,10 @@ exports.removeCountries = function(req, res)
 	{
 		// fetch the device, remove the countries property, 
 		// then update with the changed device object:
-		deviceUtils.findDevice(regid).then(
+		deviceDao.findDevice(regid).then(
 			function(device) {
 				delete device.countries;
-				deviceUtils.updateDevice(device).then(
+				deviceDao.updateDevice(device).then(
 					function() {
 						res.send("Updated.");
 					},

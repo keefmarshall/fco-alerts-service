@@ -1,5 +1,5 @@
 /**
- * 'vows' tests for ../lib/deviceUtils.js
+ * 'vows' tests for ../lib/deviceDao.js
  * 
  * NB: requires a local MONGODB running - not strictly a unit test!
  * 
@@ -20,7 +20,7 @@ var expect = require('chai').expect;
 process.env["MONGOTEST_URL"] = "localhost:27017/fco-alerts-testdb";
 
 // class we're testing:
-var deviceUtils = require('../lib/deviceUtils');
+var deviceDao = require('../lib/deviceDao');
 
 // Test fixture:
 var device1 = { _id : 'devutils.test1', countries : ['France', 'Greece']};
@@ -30,7 +30,7 @@ vows.describe('devices').addBatch({
 	
 	"A new device" : {
 		topic: function() {
-			deviceUtils.insertDevice(device1).should.eventually.deep.equal(device1)
+			deviceDao.insertDevice(device1).should.eventually.deep.equal(device1)
 				.notify(this.callback);
 		},
 		'can be inserted' : function() {}
@@ -40,7 +40,7 @@ vows.describe('devices').addBatch({
 	
 	"An existing device" : {
 		topic: function() {
-			deviceUtils.findDevice(device1._id).should.eventually.deep.equal(device1)
+			deviceDao.findDevice(device1._id).should.eventually.deep.equal(device1)
 				.notify(this.callback);
 		},
 		"can be found" : function() {}
@@ -54,7 +54,7 @@ vows.describe('devices').addBatch({
 				_id : device1._id,
 				countries: ['Angola', 'Barbados']
 			};
-			deviceUtils.updateDevice(device).should.be.fulfilled.and.notify(this.callback);
+			deviceDao.updateDevice(device).should.be.fulfilled.and.notify(this.callback);
 		},
 		"can be updated" : function() {}
 	}
@@ -63,7 +63,7 @@ vows.describe('devices').addBatch({
 	
 	"An existing device" : {
 		topic: function() {
-			deviceUtils.deleteDevice(device1._id).should.be.fulfilled.and.notify(this.callback);
+			deviceDao.deleteDevice(device1._id).should.be.fulfilled.and.notify(this.callback);
 		},
 		"can be deleted" : function() {}
 	}
@@ -73,8 +73,8 @@ vows.describe('devices').addBatch({
 	"An existing device" : {
 		topic: function() { 
 			// the trick here is to also pass any rejected error to the callback
-			deviceUtils.insertDevice(device2).then(
-				deviceUtils.changeDeviceId(device2._id, "devutils.changed").
+			deviceDao.insertDevice(device2).then(
+				deviceDao.changeDeviceId(device2._id, "devutils.changed").
 					should.be.fulfilled.and.notify(this.callback), this.callback);
 		},
 		"can have it's ID changed" : function() { }
@@ -85,9 +85,9 @@ vows.describe('devices').addBatch({
 	"clean up" : {
 		topic: function() {
 			var callback = this.callback;
-			deviceUtils.deleteDevice(device1._id).then(function() {
-				deviceUtils.deleteDevice(device2._id).then(function() {
-					deviceUtils.deleteDevice("devutils.changed").then(callback);
+			deviceDao.deleteDevice(device1._id).then(function() {
+				deviceDao.deleteDevice(device2._id).then(function() {
+					deviceDao.deleteDevice("devutils.changed").then(callback);
 				}, callback);
 			}, callback);
 		},
