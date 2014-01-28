@@ -6,7 +6,8 @@
  * var mongodb = require("./mongodb");
  */
 
-var databaseURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || "localhost:27017/fco-alerts";
+var databaseURI = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||
+	process.env.MONGOTEST_URL ||"localhost:27017/fco-alerts";
 var collections = ["alerts", "devices", "meta", "worldgeo", "retireddevices"];
 var mongodb = require("mongojs").connect(databaseURI, collections);
 
