@@ -35,7 +35,7 @@ exports.findDevice = function(regid)
  */
 exports.findDeviceByCountryPreference = function(country)
 {
-	var promise = new RSVP.Promise(function(resolve, reject) 
+	return new RSVP.Promise(function(resolve, reject) 
 	{
 		db.devices.find(
 				{ $or : [{ 'countries' : {$exists: false}}, { 'countries' : country }]},
