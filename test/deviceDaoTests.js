@@ -89,10 +89,10 @@ vows.describe('devices').addBatch({
 		topic: function() {
 			var callback = this.callback;
 			deviceDao.deleteDevice(device1._id).then(function() {
-				deviceDao.deleteDevice(device2._id);
+				return deviceDao.deleteDevice(device2._id);
 			}).then(function() {
-				deviceDao.deleteDevice("devutils.changed").then(callback);
-			}).catch(callback);
+				return deviceDao.deleteDevice("devutils.changed");
+			}).then(callback).catch(callback);
 		},
 		"done": function(){}
 	}
