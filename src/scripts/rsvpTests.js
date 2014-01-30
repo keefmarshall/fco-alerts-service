@@ -16,6 +16,7 @@ var RSVP = require('rsvp');
 // soon as it occurs, so there is a very real danger that the remaining tasks 
 // will still be in progress at this point. I recommend always using allSettled()
 // for this reason as it will only fulfill once everything has finished.
+// [otherwise if you call process.exit() in all().catch() then you'll cut off threads]
 
 function buildPromises() 
 {
