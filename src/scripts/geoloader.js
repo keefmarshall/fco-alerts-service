@@ -10,7 +10,7 @@
  * to split out the multi ones into single polygons which is a right pain.
  */
 
-var db = require('../mongodb');
+var db = require('../lib/mongodb');
 
 var fs = require('fs');
 var file = '../../world.geo.json/countries.geo.json';

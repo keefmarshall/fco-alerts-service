@@ -1,5 +1,5 @@
 /**
- * 'vows' tests for ../lib/deviceDao.js
+ * 'vows' tests for ../src/lib/deviceDao.js
  * 
  * NB: requires a local MONGODB running - not strictly a unit test!
  * 
@@ -20,7 +20,7 @@ var expect = require('chai').expect;
 process.env["MONGOTEST_URL"] = "localhost:27017/fco-alerts-testdb";
 
 // class we're testing:
-var deviceDao = require('../lib/deviceDao');
+var deviceDao = require('../src/lib/deviceDao');
 
 // Test fixture:
 var device1 = { _id : 'devutils.test1', countries : ['France', 'Greece']};

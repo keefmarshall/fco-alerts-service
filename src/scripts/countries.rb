@@ -1,3 +1,5 @@
+Encoding.default_internal = 'UTF-8'
+
 file = File.new('../data/countries.html')
 print "[\n"
 while (line = file.gets)

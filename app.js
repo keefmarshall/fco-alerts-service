@@ -4,11 +4,11 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var alertFeed = require('./routes/fco-alert-feed');
-var alertData = require('./routes/fco-alert-data');
-var test = require('./routes/test');
-var user = require('./routes/user');
+var routes = require('./src/routes');
+var alertFeed = require('./src/routes/fco-alert-feed');
+var alertData = require('./src/routes/fco-alert-data');
+var test = require('./src/routes/test');
+var user = require('./src/routes/user');
 var http = require('http');
 var path = require('path');
 

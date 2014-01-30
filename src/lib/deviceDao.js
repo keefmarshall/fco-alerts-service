@@ -8,7 +8,7 @@
  * 
  */
 
-var db = require('../mongodb');
+var db = require('./mongodb');
 var RSVP = require('rsvp');
 
 exports.findDevice = function(regid)

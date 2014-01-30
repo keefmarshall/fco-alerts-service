@@ -4,7 +4,7 @@
  *
  */
 
-var db = require('../mongodb');
+var db = require('../lib/mongodb');
 
 exports.regionList = function(req, res)
 {

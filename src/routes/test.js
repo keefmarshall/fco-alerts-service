@@ -3,7 +3,7 @@
  */
 
 var alerter = require('../lib/alerter');
-var db = require('../mongodb');
+var db = require('../lib/mongodb');
 var utils = require('../lib/utils');
 
 exports.triggerAlert = function(req, res) {

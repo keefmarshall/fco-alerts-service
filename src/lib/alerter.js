@@ -3,7 +3,7 @@
  */
 
 var gcm = require('node-gcm');
-var db = require('../mongodb.js');
+var db = require('./mongodb.js');
 var deviceDao = require('./deviceDao');
 
 var sendNotification = function(devices, message) 
