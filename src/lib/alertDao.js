@@ -5,6 +5,22 @@
 var db = require('./mongodb');
 var RSVP = require('rsvp');
 
+exports.latestAlerts = function(n)
+{
+	n = n ? n : 10;
+	
+	return new RSVP.Promise(function(resolve, reject) 
+	{
+		db.alerts.find().sort({"date": -1}).limit(n, function(err, alerts){
+			if (err) {
+				reject(err);
+			} else {
+				resolve(alerts);
+			}
+		});
+	});
+};
+
 exports.upsertAlert = function(alert)
 {
 	var promise = new RSVP.Promise(function(resolve, reject) {
@@ -24,7 +40,7 @@ exports.upsertAlert = function(alert)
 
 exports.cleanAtomKeys = function(alert)
 {
-	// we want this to be clean, i.e. not affect the input:
+	// we want this to be clean, i.e. not affect the input, so take a copy of the original:
 	var clonedAlert = JSON.parse(JSON.stringify(alert));
 	for (var key in clonedAlert)
 	{

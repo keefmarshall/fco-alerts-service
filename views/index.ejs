@@ -5,16 +5,16 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <img src="/images/fco-alerts-logo.png" width="300" height="300" class="left"/>
+    <img src="/images/fco-alerts-logo.png" width="200" height="200" class="left"/>
     
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1>Welcome to <%= title %></h1>
     
     <p>
         This is the web service supporting the 
         <a href="https://play.google.com/store/apps/details?id=uk.co.eleusis.android.fcoalerts">FCO
         Alerts</a> Android application. The application takes travel and security alerts from the
-        UK Foreign and Commonwealth Office and creates notifications on your phone or tablet.
+        UK <a href="https://www.gov.uk/government/organisations/foreign-commonwealth-office"
+        >Foreign and Commonwealth Office</a> and creates notifications on your phone or tablet.
     </p>
     
     <p>
@@ -22,6 +22,23 @@
         interested in to exclude those they don't want, and can
         configure the notification mechanism as required (vibrate, sound etc).
     </p>
-        
+    
+    <div class="clear"></div>
+    
+    <table class="latest-alerts-table">
+        <% for (var i = 0; i < alerts.length; i++) { %>
+            <tr>
+                <th>
+                    <span class="country"><%=alerts[i].title%></span>
+                    <br/>
+                    <span class="date"><%=alerts[i].date%></span>
+                </th>
+                <td>
+                    <a href="<%=alerts[i].link%>"><%-alerts[i].description%></a>
+                </td>
+            </tr>    
+        <% } %>
+    </table>
+    
   </body>
 </html>

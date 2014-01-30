@@ -5,7 +5,7 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #0097CF;
 }
 
 .left {
@@ -14,4 +14,35 @@ a {
 
 .right {
 	float: right;
+}
+
+.clear {
+	clear: both;
+}
+
+img {
+    margin: 10px;
+}
+
+.date {
+	font-weight: normal;
+	font-size: 70%;
+}
+
+table {
+	margin: 10px 0px 10px 30px;
+	border-collapse: collapse;
+}
+
+th, td {
+	margin: 0px;
+	padding: 5px;
+	border-top: 1px solid black;
+	text-align: left;
+	vertical-align: top;
+}
+
+td div {
+	vertical-align: top;
+	display: inline;
 }
