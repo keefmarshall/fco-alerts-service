@@ -27,6 +27,7 @@ img {
 .date {
 	font-weight: normal;
 	font-size: 70%;
+	color: gray;
 }
 
 table {
@@ -37,7 +38,7 @@ table {
 th, td {
 	margin: 0px;
 	padding: 5px;
-	border-top: 1px solid black;
+	border-top: 1px solid gray;
 	text-align: left;
 	vertical-align: top;
 }
@@ -45,4 +46,13 @@ th, td {
 td div {
 	vertical-align: top;
 	display: inline;
+}
+
+address {
+	padding-top: 3px;
+	color: gray;
+	font-size: 80%;
+	text-align: right;
+	border-top: 1px solid gray;
+	font-style: italic;
 }
