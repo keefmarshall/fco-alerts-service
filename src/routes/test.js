@@ -40,8 +40,9 @@ exports.triggerAlert = function(req, res) {
 function sendTestAlert(alert, res)
 {
 	alert.title = "TEST: " + alert.title;
-	alerter.triggerAlert(alert);
-	res.send("Alert triggered for " + alert.title);
+	alerter.triggerAlert(alert).then(function() {
+		res.send("Alert triggered for " + alert.title);
+	});
 }
 
 exports.addTestDevice = function(req, res)

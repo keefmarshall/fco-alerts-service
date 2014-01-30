@@ -5,10 +5,16 @@
 var gcm = require('node-gcm');
 var RSVP = require('rsvp');
 
-var db = require('./mongodb.js');
 var deviceDao = require('./deviceDao');
 
-var sendNotification = function(devices, message) 
+/**
+ * This sends a GCM message to the listed devices.
+ * 
+ * @param devices - an array of registration IDs.
+ * @param message - correctly formatted GCM message to send.
+ * @return returns a promise
+ */
+function sendNotification(devices, message) 
 {
 	return new RSVP.Promise(function(resolve, reject) {
 		
@@ -51,7 +57,7 @@ var sendNotification = function(devices, message)
 			}
 		});
 	});
-};
+}
 
 /**
  * Now, we have to process the GCM response - there are two things we have to
@@ -60,6 +66,9 @@ var sendNotification = function(devices, message)
  *    example. We should delete the device.
  * 2. A registration ID has changed - not sure how this can happen, but if it does, we
  *    need to change our ID too.
+ * 
+ * NB: to test this, add a dodgy ID into db.devices and send a test alert. The fake device
+ * should be removed automatically.
  */
 function handleGcmErrorResponse(result, registrationIds, resolve, reject)
 {
@@ -92,9 +101,9 @@ function handleGcmErrorResponse(result, registrationIds, resolve, reject)
 		}
 	}
 	
-	// we actually don't want to reject if this fails, because it might stop alert processing
-	// and it's actually not the key part of the job here. So, we need to log failures but
-	// carry on and mark this as resolved.
+	// we actually don't want to reject if this fails, because it might stop 
+	// alert processing and it's not the key part of the job here. So, we 
+	// need to log failures but carry on and mark this as resolved.
 	RSVP.allSettled(promises).then(resolve).catch(function(err) {
 		// this should never happen
 		console.log("GCM response processing failed: ", err);
@@ -102,44 +111,47 @@ function handleGcmErrorResponse(result, registrationIds, resolve, reject)
 	});
 }
 
+/**
+ * Trigger a GCM notification for the specified alert item. Returns a promise.
+ * 
+ * 'item' must have properties 'title', 'description', 'date' and 'guid'.
+ */
 exports.triggerAlert = function(item)
 {
-	console.log("ALERT: " + item.title + ": " + item.description);
-	
-	// Build the message:
-	var message = new gcm.Message({
-		collapseKey: item.title,
-		delayWhileIdle: true,
-		timeToLive: 60 * 60 * 24, // 1 day
-		data: {
-			guid: item.guid,
-			title: item.title,
-			description: item.description,
-			link: item.link
-        }
-	});
-	
-	var country = item.title;
-	if (/^TEST: /.test(country))
-	{
-		country = country.substring(6);
-		console.log("Test message detected, using country code '" + country + "'.");
-	}
-	
-	// We're looking for devices that either have not specified any countries, or have
-	// got the country listed in their preferences:
-	db.devices.find(
-			{ $or : [{ 'countries' : {$exists: false}}, { 'countries' : country }]},
-			function(err, devices) {
-		if (!err)
+	return new RSVP.Promise(function(resolve, reject) {
+		
+		console.log("ALERT: " + item.title + ": " + item.description);
+		
+		// Build the message:
+		var message = new gcm.Message({
+			collapseKey: item.title,
+			delayWhileIdle: true,
+			timeToLive: 60 * 60 * 24, // 1 day
+			data: {
+				guid: item.guid,
+				title: item.title,
+				description: item.description,
+				link: item.link
+			}
+		});
+		
+		var country = item.title;
+		if (/^TEST: /.test(country))
 		{
-			sendNotification(devices, message).then();
+			country = country.substring(6);
+			console.log("Test message detected, using country code '" + country + "'.");
 		}
-		else
-		{
+		
+		// We're looking for devices that either have not specified any countries, or have
+		// got the country listed in their preferences:
+		deviceDao.findDeviceByCountryPreference(country).then(function(devices) {
+			return sendNotification(devices, message);
+		}).then(resolve).catch(function(err) {
 			// log error, not much else we can do
-			console.log("An error occurred fetching devices: " + err);
-		}
+			console.log("An error occurred fetching devices: ", err);
+			reject(err);
+		});
+
 	});
 
 };

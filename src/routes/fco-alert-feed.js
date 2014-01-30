@@ -41,7 +41,7 @@ function updateAlertsFromFeed(feed)
 				{
 					storeAlert(item);
 					item.description = utils.stripHtml(item.description);
-					alerter.triggerAlert(item);
+					alerter.triggerAlert(item).then();
 				}
 			}
 			console.log("Finished updating alerts in database.");
