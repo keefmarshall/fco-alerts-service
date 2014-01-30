@@ -134,7 +134,7 @@ exports.changeDeviceId = function(oldId, newId)
 			if (err || !device)
 			{
 				// shouldn't really happen, but.. nothing much we can do here
-				console.log("deviceUtils: deleteDevice: error finding device: " + err);
+				console.log("deviceUtils.changeDeviceId: error finding device: " + err);
 				reject(err);
 			}
 			else
@@ -144,7 +144,7 @@ exports.changeDeviceId = function(oldId, newId)
 				db.devices.insert(device, function(err, saved) {
 					if (err || !saved)
 					{
-						console.log("Error changing canonical ID for device: " + err);
+						console.log("deviceUtils: Error changing canonical ID for device: " + err);
 						reject(err);
 					}
 					else

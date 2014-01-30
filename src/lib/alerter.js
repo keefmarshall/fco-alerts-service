@@ -104,11 +104,13 @@ function handleGcmErrorResponse(result, registrationIds, resolve, reject)
 	// we actually don't want to reject if this fails, because it might stop 
 	// alert processing and it's not the key part of the job here. So, we 
 	// need to log failures but carry on and mark this as resolved.
-	RSVP.allSettled(promises).then(resolve).catch(function(err) {
-		// this should never happen
-		console.log("GCM response processing failed: ", err);
-		resolve();
-	});
+	RSVP.allSettled(promises)
+		.then(resolve)
+		.catch(function(err) {
+			// this should never happen
+			console.log("GCM response processing failed: ", err);
+			resolve();
+		});
 }
 
 /**
