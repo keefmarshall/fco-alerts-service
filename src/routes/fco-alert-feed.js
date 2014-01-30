@@ -26,9 +26,12 @@ function updateAlertsFromFeed(feed)
 					var item = feed.entries[i];
 					if (item.pubDate > lastUpdated)
 					{
-						promises.push(alertDao.upsertAlert(item).then(function() {
-							item.description = utils.stripHtml(item.description);
-							return alerter.triggerAlert(item);
+						// need to be careful not to reference 'item' inside the function
+						// here as it will change value by the time this is executed -
+						// we use the pass-through from the upsertAlert resolve() instead
+						promises.push(alertDao.upsertAlert(item).then(function(alertItem) {
+							alertItem.description = utils.stripHtml(alertItem.description);
+							return alerter.triggerAlert(alertItem);
 						}));
 					}
 				}

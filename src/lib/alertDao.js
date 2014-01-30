@@ -36,6 +36,7 @@ exports.upsertAlert = function(alert)
 			if (err) { 
 				reject(err);
 			} else {
+				console.log("Upserting alert: ", alert.guid);
 				resolve(alert);
 			}
 		});
@@ -49,17 +50,18 @@ exports.upsertAlert = function(alert)
 exports.cleanAtomKeys = function(alert)
 {
 	// we want this to be clean, i.e. not affect the input, so take a copy of the original:
-	var clonedAlert = JSON.parse(JSON.stringify(alert));
-	for (var key in clonedAlert)
+	// actually, don't do this - turns out it messes with the date classes
+	//var clonedAlert = JSON.parse(JSON.stringify(alert));
+	for (var key in alert)
 	{
 		// remove all the "atom:" keys - they're duplicates and they just use up space
 		if (key.lastIndexOf("atom") === 0)
 		{
-			delete clonedAlert[key];
+			delete alert[key];
 		}
 	}
 
-	return clonedAlert;
+	return alert;
 };
 
 /**
