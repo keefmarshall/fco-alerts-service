@@ -31,7 +31,7 @@ exports.upsertAlert = function(alert)
 {
 	return new RSVP.Promise(function(resolve, reject) {
 		alert._id = alert.guid;
-		alert = cleanAtomKeys(alert);
+		alert = exports.cleanAtomKeys(alert);
 		db.alerts.update({"_id": alert._id}, alert, {upsert: true}, function(err) {
 			if (err) { 
 				reject(err);
@@ -46,7 +46,7 @@ exports.upsertAlert = function(alert)
  * Remove keys starting with "atom:" from the alert. 
  * Synchronous method, does *not* return a promise.
  */
-function cleanAtomKeys(alert)
+exports.cleanAtomKeys = function(alert)
 {
 	// we want this to be clean, i.e. not affect the input, so take a copy of the original:
 	var clonedAlert = JSON.parse(JSON.stringify(alert));
@@ -60,7 +60,7 @@ function cleanAtomKeys(alert)
 	}
 
 	return clonedAlert;
-}
+};
 
 /**
  * Delete an alert from the database. Returns a promise.
