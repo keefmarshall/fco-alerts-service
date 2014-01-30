@@ -1,72 +1,106 @@
 /**
- * Push out alerts
+ * Push out alerts via Google Cloud Messaging
  */
 
 var gcm = require('node-gcm');
+var RSVP = require('rsvp');
+
 var db = require('./mongodb.js');
 var deviceDao = require('./deviceDao');
 
 var sendNotification = function(devices, message) 
 {
-	var registrationIds = [];
-	var sender = new gcm.Sender(process.env.GOOGLE_API_KEY);
-
-	// TODO: can only send a max of 1000 registration IDs in a single msg.
-	// This means that if the app does actually take off, this will have
-	// to be a bit more clever. Unless the node-gcm lib already handles this -
-	// must check.
-	for (var i = 0; i < devices.length; i++)
-	{
-		registrationIds.push(devices[i]._id);
-	}
-
-	sender.send(message, registrationIds, 4, function (err, result) {
-		if (err || !result)
-		{
-			console.log("Error pushing GCM message: " + err);
-			return;
-		}
+	return new RSVP.Promise(function(resolve, reject) {
 		
-		console.log(JSON.stringify(result, null, 2));
-
-		// Now, we have to process the GCM response - there are two things we have to
-		// look for
-		// 1. A particular registration ID is invalid - likely because the user uninstalled, for
-		//    example. We should delete the device.
-		// 2. A registration ID has changed - not sure how this can happen, but if it does, we
-		//    need to change our ID too.
-
-		if (result.failure > 0 || result.canonical_ids > 0)
+		var registrationIds = [];
+		var sender = new gcm.Sender(process.env.GOOGLE_API_KEY);
+	
+		// TODO: can only send a max of 1000 registration IDs in a single msg.
+		// This means that if the app does actually take off, this will have
+		// to be a bit more clever. The node-gcm lib doesn't handle this.
+		for (var i = 0; i < devices.length; i++)
 		{
-			console.log("At least one error or change detected.. processing response...");
-
-			// At least one ID failed or changed - we have to loop through in order.
-			// Luckily the order is supposed to be the same as our registrationIds array
-			for (var i = 0; i < result.results.length; i++)
-			{
-				var res = result.results[i];
-				var regid = registrationIds[i];
-				
-				// There's a whole ton of possible error conditions but these look like the
-				// main ones to worry about in terms of removing devices:
-				if (res.error && 
-						(res.error == "NotRegistered" || res.error == "InvalidRegistration"))
-				{
-					// device probably uninstalled the app, so remove it from the DB
-					console.log("detected invalid registration, removing device: " + regid);
-					deviceDao.deleteDevice(regid).then();
-				}
-				else if (res.message_id && res.canonical_id)
-				{
-					// need to switch the existing device's ID in the database:
-					var newId = res.canonical_id;
-					console.log("Canonical device ID change from " + regid + " to " + newId);
-					deviceDao.changeDeviceId(regid, newId).then();
-				}
-			}
+			registrationIds.push(devices[i]._id);
 		}
+	
+		sender.send(message, registrationIds, 4, function (err, result) {
+			if (err || !result)
+			{
+				console.log("Error pushing GCM message: " + err);
+				reject(err);
+			}
+			
+			//console.log(JSON.stringify(result, null, 2));
+			console.log("GCM response: ", {
+					multicast_id: result.multicast_id,
+					success: result.success,
+					failure: result.failure,
+					canonical_ids: result.canonical_ids,
+					result_size: result.results.length
+				});
+	
+	
+			if (result.failure > 0 || result.canonical_ids > 0)
+			{
+				console.log("At least one error or change detected.. processing response...");
+				handleGcmErrorResponse(result, registrationIds, resolve, reject);
+			}
+			else
+			{
+				resolve();
+			}
+		});
 	});
 };
+
+/**
+ * Now, we have to process the GCM response - there are two things we have to
+ * look for
+ * 1. A particular registration ID is invalid - likely because the user uninstalled, for
+ *    example. We should delete the device.
+ * 2. A registration ID has changed - not sure how this can happen, but if it does, we
+ *    need to change our ID too.
+ */
+function handleGcmErrorResponse(result, registrationIds, resolve, reject)
+{
+	// At least one ID failed or changed - we have to loop through in order.
+	// Luckily the order is supposed to be the same as our registrationIds array
+	var promises = [];
+	for (var i = 0; i < result.results.length; i++)
+	{
+		var res = result.results[i];
+		var regid = registrationIds[i];
+		
+		// There's a whole ton of possible error conditions but these look like the
+		// main ones to worry about in terms of removing devices:
+		if (res.error && 
+				(res.error == "NotRegistered" || res.error == "InvalidRegistration"))
+		{
+			// device probably uninstalled the app, so remove it from the DB
+			console.log("detected invalid registration, removing device: " + regid);
+			promises.push(deviceDao.deleteDevice(regid));
+		}
+		else if (res.message_id && res.canonical_id)
+		{
+			// need to switch the existing device's ID in the database:
+			var newId = res.canonical_id;
+			console.log("Canonical device ID change from " + regid + " to " + newId);
+			promises.push(deviceDao.changeDeviceId(regid, newId));
+		}
+		else { 
+			// nothing to do here.. 
+		}
+	}
+	
+	// we actually don't want to reject if this fails, because it might stop alert processing
+	// and it's actually not the key part of the job here. So, we need to log failures but
+	// carry on and mark this as resolved.
+	RSVP.allSettled(promises).then(resolve).catch(function(err) {
+		// this should never happen
+		console.log("GCM response processing failed: ", err);
+		resolve();
+	});
+}
 
 exports.triggerAlert = function(item)
 {
@@ -99,7 +133,7 @@ exports.triggerAlert = function(item)
 			function(err, devices) {
 		if (!err)
 		{
-			sendNotification(devices, message);
+			sendNotification(devices, message).then();
 		}
 		else
 		{
