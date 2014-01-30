@@ -29,6 +29,26 @@ exports.findDevice = function(regid)
 	return promise;
 };
 
+/**
+ * Find devices that have either specifically selected this country, or have no
+ * countries selected (which implies "all")
+ */
+exports.findDeviceByCountryPreference = function(country)
+{
+	var promise = new RSVP.Promise(function(resolve, reject) 
+	{
+		db.devices.find(
+				{ $or : [{ 'countries' : {$exists: false}}, { 'countries' : country }]},
+				function(err, devices) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(devices);
+					}
+		});
+	});
+};
+
 exports.insertDevice = function(device)
 {
 	var promise = new RSVP.Promise(function(resolve, reject) 
