@@ -14,7 +14,7 @@ var assert = require('chai').assert;
 var expect = require('chai').expect;
 
 // We want to use a test MONGODB:
-process.env["MONGOTEST_URL"] = "localhost:27017/fco-alerts-testdb";
+process.env.MONGOTEST_URL = "localhost:27017/fco-alerts-testdb";
 
 // class we're testing:
 var alertDao = require('../src/lib/alertDao');

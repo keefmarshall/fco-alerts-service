@@ -20,7 +20,7 @@ exports.triggerAlert = function(req, res) {
 	}
 	else if (req.param("index")) // send the 'n'th alert, given index=n
 	{
-		var index = parseInt(req.param("index"));
+		var index = parseInt(req.param("index"), 10);
 		db.alerts.find().limit(index, function(err, alerts) {
 			var alert = alerts[index - 1];
 			alert.description = utils.stripHtml(alert.description);
