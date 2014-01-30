@@ -1,0 +1,52 @@
+{
+  "title": "China",
+  "description": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n<p>Latest update: Health section – local alcoholic drinks</p>      </div>",
+  "summary": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n<p>Latest update: Health section – local alcoholic drinks</p>      </div>",
+  "date": "2014-01-29T10:52:35.000Z",
+  "pubdate": "2014-01-29T10:52:35.000Z",
+  "pubDate": "2014-01-29T10:52:35.000Z",
+  "link": "https://www.gov.uk/foreign-travel-advice/china",
+  "guid": "https://www.gov.uk/foreign-travel-advice/china#2014-01-29T10:52:35+00:00",
+  "author": "GOV.UK",
+  "comments": null,
+  "origlink": null,
+  "image": {},
+  "source": {},
+  "categories": [],
+  "enclosures": [],
+  "atom:@": {},
+  "atom:id": {
+    "@": {},
+    "#": "https://www.gov.uk/foreign-travel-advice/china#2014-01-29T10:52:35+00:00"
+  },
+  "atom:updated": {
+    "@": {},
+    "#": "2014-01-29T10:52:35+00:00"
+  },
+  "atom:link": [
+    {
+      "@": {
+        "rel": "alternate",
+        "type": "text/html",
+        "href": "https://www.gov.uk/foreign-travel-advice/china"
+      }
+    },
+    {
+      "@": {
+        "rel": "self",
+        "type": "application/atom+xml",
+        "href": "https://www.gov.uk/foreign-travel-advice/china.atom"
+      }
+    }
+  ],
+  "atom:title": {
+    "@": {},
+    "#": "China"
+  },
+  "atom:summary": {
+    "@": {
+      "type": "xhtml"
+    },
+    "#": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n<p>Latest update: Health section – local alcoholic drinks</p>      </div>"
+  }
+}
