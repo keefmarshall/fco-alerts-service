@@ -27,6 +27,8 @@ setTimeout(function() {
 	process.exit();
 }, 30000);
 
+console.log("Feedtask: starting update process...");
+
 // Do the work:
 alertFeed.updateAlerts()
 	.then(function() {
