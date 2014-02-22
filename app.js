@@ -28,12 +28,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+	console.log('Development mode');
+	app.use(express.errorHandler());
+
+	//DEBUG/TEST:
+	app.get('/fakealert', test.triggerAlert);
+	app.get('/addtestdevice', test.addTestDevice);
+	app.get('/refresh_alerts', alertFeed.refresh);
+}
+else
+{
+	console.log("Production mode");
 }
 
 app.get('/', routes.index);
 //app.get('/users', user.list);
-app.get('/refresh_alerts', alertFeed.refresh);
 
 app.get('/regions', alertData.regionList);
 app.get('/regions/:region', alertData.region);
@@ -47,9 +56,6 @@ app.post('/deregister', user.deregister);
 app.post('/countries', user.setCountries);
 app.post('/removeCountries', user.removeCountries);
 
-// DEBUG/TEST:
-//app.get('/fakealert', test.triggerAlert);
-//app.get('/addtestdevice', test.addTestDevice);
 
 // start cron job to update alerts:
 // TODO: make this work sanely with multiple instances
