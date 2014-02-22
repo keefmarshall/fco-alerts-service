@@ -133,7 +133,8 @@ exports.triggerAlert = function(item)
 				guid: item.guid,
 				title: item.title,
 				description: item.description,
-				link: item.link
+				link: item.link,
+				date: item.date
 			}
 		});
 		
