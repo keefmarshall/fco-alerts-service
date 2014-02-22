@@ -62,7 +62,17 @@ exports.setCountries = function(req, res)
 	{
 		var countriesJson = req.body.countries;
 	
-		var countries = JSON.parse(countriesJson);
+		try
+		{
+			var countries = JSON.parse(countriesJson);
+		}
+		catch(e)
+		{
+			console.log("JSON parse of 'countries' failed, value was: " + countriesJson + ": ", e);
+			res.status(400).send("'countries' is not valid JSON: ", e);
+			return;
+		}
+		
 		var device = {
 			"_id": regid,
 			"countries": countries
@@ -124,3 +134,17 @@ function getRegidFromRequest(req, res)
 		return regid;
 	}
 }
+
+// need to validate that regid is sane. It looks, from inspection, as thoug
+// GCM registration IDs are base-64 hashes of some kind, so [A-Za-z0-9-_]
+// should cover it. At least this way there's little danger of any script
+// injection, I hope - we do end up passing this value to MongoDB.
+var validRegidPattern = /^[A-Za-z0-9\-_]*$/;
+
+function validateRegid(regid)
+{
+	return validRegidPattern.test(regid);
+}
+
+// Export this so we can test it
+exports.validateRegid = validateRegid;
