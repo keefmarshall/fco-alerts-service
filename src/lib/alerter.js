@@ -18,7 +18,6 @@ function sendNotification(devices, message)
 {
 	return new RSVP.Promise(function(resolve, reject) {
 		
-		var registrationIds = [];
 		var sender = new gcm.Sender(process.env.GOOGLE_API_KEY);
 	
 		// We can only send a max of 1000 registration IDs in a single msg.
@@ -27,20 +26,32 @@ function sendNotification(devices, message)
 		// [to be honest, I think it's unlikely!]
 		
 		// break into chunks of 1000, with a leftover chunk of <1000 at the end
-		// NB this loop won't fire if there's less than 1000 devices.
-		var i, numchunks = Math.floor(devices.length / 1000);
+		var i, numchunks = Math.floor(devices.length / 1000) + 1;
+		var batches = [];
 		for (var chunk = 0; chunk < numchunks; chunk++)
 		{
-			var firstdev = chunk * 1000;
-			var lastdev = (chunk + 1) * 1000;
-			for (i = firstdev; i < lastdev; i++)
-			{
-				registrationIds.push(devices[i]._id);
-			}			
+			batches.push(sendToBatch(devices, message, sender, chunk));
 		}
+	
+		RSVP.allSettled(batches)
+		.then(resolve)
+		.catch(function(err) {
+			console.log("Batch GCM notification send failed: ", err);
+			reject(err);
+		});
+	});
+}
+
+function sendToBatch(devices, message, sender, chunk)
+{
+	return new RSVP.Promise(function(resolve, reject) {
 		
-		// now the remainder:
-		for (i = numchunks * 1000; i < devices.length; i++)
+		var firstdev = chunk * 1000;
+		var lastdev = (chunk + 1) * 1000;
+		lastdev = lastdev > devices.length ? devices.length : lastdev;
+		
+		var registrationIds = [];
+		for (i = firstdev; i < lastdev; i++)
 		{
 			registrationIds.push(devices[i]._id);
 		}
