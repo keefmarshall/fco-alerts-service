@@ -21,10 +21,26 @@ function sendNotification(devices, message)
 		var registrationIds = [];
 		var sender = new gcm.Sender(process.env.GOOGLE_API_KEY);
 	
-		// TODO: can only send a max of 1000 registration IDs in a single msg.
-		// This means that if the app does actually take off, this will have
-		// to be a bit more clever. The node-gcm lib doesn't handle this.
-		for (var i = 0; i < devices.length; i++)
+		// We can only send a max of 1000 registration IDs in a single msg.
+		// Unfortunately I can't think of an easy way to test this as I don't
+		// have 1000 devices! Will just have to hope it works if we ever get there
+		// [to be honest, I think it's unlikely!]
+		
+		// break into chunks of 1000, with a leftover chunk of <1000 at the end
+		// NB this loop won't fire if there's less than 1000 devices.
+		var i, numchunks = Math.floor(devices.length / 1000);
+		for (var chunk = 0; chunk < numchunks; chunk++)
+		{
+			var firstdev = chunk * 1000;
+			var lastdev = (chunk + 1) * 1000;
+			for (i = firstdev; i < lastdev; i++)
+			{
+				registrationIds.push(devices[i]._id);
+			}			
+		}
+		
+		// now the remainder:
+		for (i = numchunks * 1000; i < devices.length; i++)
 		{
 			registrationIds.push(devices[i]._id);
 		}
