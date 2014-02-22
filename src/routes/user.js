@@ -61,15 +61,18 @@ exports.setCountries = function(req, res)
 	if (regid)
 	{
 		var countriesJson = req.body.countries;
-	
+		var countries;
+		
 		try
 		{
-			var countries = JSON.parse(countriesJson);
+			// this will not allow invalid JSON through
+			countries = JSON.parse(countriesJson);
+			
 		}
 		catch(e)
 		{
 			console.log("JSON parse of 'countries' failed, value was: " + countriesJson + ": ", e);
-			res.status(400).send("'countries' is not valid JSON: ", e);
+			res.status(400).send("'countries' is not valid: ", e);
 			return;
 		}
 		
