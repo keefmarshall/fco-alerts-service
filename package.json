@@ -8,7 +8,7 @@
   "dependencies": {
     "express": "3.4.4",
     "ejs": "*",
-    "mongojs": "*",
+    "mongojs": "2.4.x",
     "feedparser" : "*",
     "request": "*",
     "cron" : "*",
