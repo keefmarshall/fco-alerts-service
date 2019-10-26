@@ -2,6 +2,9 @@
   "name": "fco-alerts-service",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": "8.11.4"
+  },
   "scripts": {
     "start": "node app.js"
   },
